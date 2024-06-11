@@ -1,9 +1,9 @@
 import { Schema, model } from 'mongoose';
-import { Guardian, LocalGuardian, Student, UserName } from './student.interface';
+import { TGuardian, TLocalGuardian, TStudent, StudentModel, TUserName } from './student.interface';
 import validator from 'validator';
 
 
-const userNameSchema = new Schema<UserName>({
+const userNameSchema = new Schema<TUserName>({
   firstName: {
     type: String,
     required: [true, 'First Name is required'],
@@ -20,13 +20,13 @@ const userNameSchema = new Schema<UserName>({
     required: [true, 'Last Name is required'],
     maxlength: [20, 'Name can not be more than 20 characters'],
     validate: {
-      validator: (value: string)=> validator.isAlpha(value),
+      validator: (value: string) => validator.isAlpha(value),
       message: "{VALUE} is not valid"
     }
   },
 });
 
-const guardianSchema = new Schema<Guardian>({
+const guardianSchema = new Schema<TGuardian>({
   fatherName: {
     type: String,
     trim: true,
@@ -55,7 +55,7 @@ const guardianSchema = new Schema<Guardian>({
   },
 });
 
-const localGuradianSchema = new Schema<LocalGuardian>({
+const localGuradianSchema = new Schema<TLocalGuardian>({
   name: {
     type: String,
     required: [true, 'Name is required'],
@@ -74,7 +74,7 @@ const localGuradianSchema = new Schema<LocalGuardian>({
   },
 });
 
-const studentSchema = new Schema<Student>({
+const studentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String, required: [true, 'ID is required'], unique: true },
   name: {
     type: userNameSchema,
@@ -94,7 +94,7 @@ const studentSchema = new Schema<Student>({
     required: [true, 'Email is required'],
     unique: true,
     validate: {
-      validator: (value:string)=> validator.isEmail(value),
+      validator: (value: string) => validator.isEmail(value),
       message: "{VALUE} is not a valid email type"
     }
   },
@@ -128,4 +128,14 @@ const studentSchema = new Schema<Student>({
   },
 });
 
-export const StudentModel = model<Student>('Student', studentSchema);
+studentSchema.statics.isUserExits = async function(id: string){
+  const existingUser = await Student.findOne({id})
+  return existingUser
+}
+
+// studentSchema.methods.isUserExits = async function(id: string){
+//   const existingUser = await Student.findOne({id})
+//   return existingUser
+// }
+
+export const Student = model<TStudent, StudentModel>('Student', studentSchema);

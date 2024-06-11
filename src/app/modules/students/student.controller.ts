@@ -23,10 +23,10 @@ const createStudent = async (req: Request, res: Response) => {
       message: 'Student is created succesfylly',
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'Somting is worning',
+      message:err.message || 'Somting is worning',
       error: err,
     });
   }
