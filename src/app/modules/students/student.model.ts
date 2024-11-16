@@ -7,15 +7,17 @@ const studentSchema = new Schema<Student>({
     name: {
         firstName: {
             type: String,
-            require: true,
+            required: true,
         },
         middleName: {
             type: String,
         },
         lastNameName: {
             type: String,
-            require: true,
+            required: true,
         },
     },
     gender: ["male", "female"],
+    dateOfBirth: {type: String},
+    email: {type: String, required: true}
 })
