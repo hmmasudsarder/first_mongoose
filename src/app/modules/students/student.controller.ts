@@ -1,8 +1,19 @@
 import { Request, Response } from 'express';
 import { StudentService } from './student.service';
+import Joi from 'joi';
 
 const createStudent = async (req: Request, res: Response) => {
   try {
+
+    const JoivalidationSchema = Joi.object({
+        id: Joi.string(),
+        name: {
+          firstName: Joi.string().max(20).required(),
+          middleName: Joi.string().max(20),
+          lastName: Joi.string().max(20)
+        },
+    
+    });
     const { student: studentData } = req.body;
     console.log(studentData);
     const result = await StudentService.createStudentIntoDB(studentData);
@@ -12,7 +23,11 @@ const createStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: 'Somting is worning',
+      error: err,
+    });
   }
 };
 
