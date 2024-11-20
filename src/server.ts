@@ -5,7 +5,6 @@ import mongoose from 'mongoose';
 
 // const test = 10;
 
-
 async function main() {
   try {
     await mongoose.connect(config.database_url as string);
@@ -17,4 +16,4 @@ async function main() {
     console.log(err);
   }
 }
-main()
+main();

@@ -1,4 +1,4 @@
-import { Schema, model, connect } from 'mongoose';
+// import { } from 'mongoose';
 
 export interface Guardian {
   fatherName: string;
