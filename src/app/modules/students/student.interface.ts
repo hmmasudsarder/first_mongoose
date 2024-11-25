@@ -30,7 +30,7 @@ export type Student = {
   email: string;
   contactNo: string;
   emergencyContactNo: string;
-  bloogGroup: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
+  bloogGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
   presentAddress: string;
   permanentAddress: string;
   guardian: Guardian;
