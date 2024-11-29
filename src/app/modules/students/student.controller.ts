@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { StudentService } from './student.service';
+import studentValidationSchema from './student.validation';
 // import { studentValidationSchema } from './student.joi.validation';
 
 const createStudent = async (req: Request, res: Response) => {
@@ -7,9 +8,16 @@ const createStudent = async (req: Request, res: Response) => {
 
     const { student: studentData } = req.body;
 
-    // console.log(studentData);
 
-    const result = await StudentService.createStudentIntoDB(studentData);
+    //data validation using zod
+
+
+    const zodparsedData = studentValidationSchema.parse(studentData)
+
+    // console.log(studentData);
+    // 
+
+    const result = await StudentService.createStudentIntoDB(zodparsedData);
     res.status(200).json({
       success: true,
       message: 'Student is created succesfylly',
