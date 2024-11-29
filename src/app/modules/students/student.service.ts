@@ -27,7 +27,13 @@ const getSingleStudent = async (id: string) => {
   return result;
 };
 
+const deletedStudent = async (id: string) => {
+  const result = await Student.updateOne({ id }, { isDeleted: true });
+  return result;
+};
+
 export const StudentService = {
+  deletedStudent,
   createStudentIntoDB,
   getAllStudentFromDB,
   getSingleStudent,

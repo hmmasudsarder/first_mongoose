@@ -78,7 +78,7 @@ const localGuradianSchema = new Schema<TLocalGuardian>({
 
 const studentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String, required: [true, 'ID is required'], unique: true },
-  password: { type: String, required: [true, 'Password is required'], unique: true, maxlength: [20, "password more then 20 chareteh"] },
+  password: { type: String, required: [true, 'Password is required'], maxlength: [20, "password more then 20 chareteh"] },
   name: {
     type: userNameSchema,
     required: true
@@ -129,19 +129,33 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     enum: ['active', 'blocked'],
     default: "active"
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 
-studentSchema.pre("save",  async function(next){
+studentSchema.pre("save", async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this 
+  const user = this
   user.password = await bcrypt.hash(user.password, Number(config.bcrypt_salt_rounds))
+  next()
+});
+
+studentSchema.post("save", function (doc, next) {
+  doc.password = "";
+  next()
+})
+
+studentSchema.pre('find', function(next){
+  this.find({isDeleted: {$ne: true}});
   next()
 })
 
 
 
-studentSchema.statics.isUserExists = async function(id: string): Promise<TStudent | null> {
+studentSchema.statics.isUserExists = async function (id: string): Promise<TStudent | null> {
   const existingUser = await this.findOne({ id });
   return existingUser;
 };
